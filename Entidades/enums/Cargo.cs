@@ -8,12 +8,12 @@ namespace Entidades.enums
 {
     public enum Cargo
     {
-        PRESIDENTE,
-        GOVERNADOR,
-        DEPUTADO_FEDERAL,
-        DEPUTADO_MUNICIPAL,
-        PREFEITO,
-        VEREADOR
+        PRESIDENTE = 0,
+        GOVERNADOR = 1,
+        PREFEITO = 2,
+        DEPUTADO_FEDERAL = 3,
+        DEPUTADO_ESTADUAL = 4,
+        VEREADOR = 5
 
     }
 }

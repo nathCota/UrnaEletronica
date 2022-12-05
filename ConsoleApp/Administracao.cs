@@ -1,4 +1,5 @@
-﻿using Entidades.enums;
+﻿using Entidades;
+using Entidades.enums;
 using Servicos.Administracao;
 
 namespace ConsoleApp
@@ -10,11 +11,13 @@ namespace ConsoleApp
         {
             Console.WriteLine("GERENCIAR ELEIÇÕES\n------------------------------");
             Console.WriteLine("1) LISTAR ELEIÇOES");
-            Console.WriteLine("2) FINALIZAR ELEIÇÃO VIGENTE");
-            Console.WriteLine("3) DEFINIR ELEIÇÃO COMO VIGENTE");
-            Console.WriteLine("4) CADASTRAR NOVA ELEIÇÃO");
-            Console.WriteLine("5) VOLTAR");
-            Console.WriteLine("6) SAIR");
+            Console.WriteLine("2) CADASTRAR NOVA ELEIÇÃO");
+            Console.WriteLine("3) EDITAR ELEIÇÃO");
+            Console.WriteLine("4) EXCLUIR ELEIÇÃO");
+            Console.WriteLine("5) FINALIZAR ELEIÇÃO VIGENTE");
+            Console.WriteLine("6) DEFINIR ELEIÇÃO COMO VIGENTE");
+            Console.WriteLine("7) VOLTAR");
+            Console.WriteLine("8) SAIR\n");
             /*
              AO FINALIZAR A ELEIÇÃO SERÁ FEITA A APURAÇÃO
              CASO NENHUM DOS CANDIDATOS TENHA TIDO +50% DOS VOTOS DEVERÁ SER REALIZADO O SEGUNDO TURNO
@@ -34,7 +37,7 @@ namespace ConsoleApp
                 Console.WriteLine("5) FINALIZAR ELEIÇÃO VIGENTE");
                 Console.WriteLine("6) DEFINIR ELEIÇÃO COMO VIGENTE");
                 Console.WriteLine("7) VOLTAR");
-                Console.WriteLine("8) SAIR");
+                Console.WriteLine("8) SAIR\n");
                 entrada = Console.ReadLine();
             }
 
@@ -43,30 +46,37 @@ namespace ConsoleApp
                 case 1:
                     Console.Clear();
                     GestaoEleicao.ListarEleicoes();
+                    GerenciarEleicao();
                     break;
                 case 2:
                     Console.Clear();
                     GestaoEleicao.CadastrarEleicao();
+                    GerenciarEleicao();
                     break;
                 case 3:
                     Console.Clear();
                     GestaoEleicao.EditarEleicao();
+                    GerenciarEleicao();
                     break;
                 case 4:
                     Console.Clear();
                     GestaoEleicao.ExcluirEleicao();
+                    GerenciarEleicao();
                     break;
                 case 5:
                     Console.Clear();
                     GestaoEleicao.FinalizarEleicaoVigente();
+                    GerenciarEleicao();
                     break;
                 case 6:
                     Console.Clear();
                     GestaoEleicao.DefinirEleicaoVigente();
+                    GerenciarEleicao();
                     break;
                 case 7:
                     Console.Clear();
                     Comunicacao.MenuInicialAdministracao();
+                    GerenciarEleicao();
                     break;
                 case 8:
                     return;
@@ -193,12 +203,37 @@ namespace ConsoleApp
         internal static void RelatoriosResumos()
         {
             Console.WriteLine("RELATÓRIOS E RESUMOS\n------------------------------");
-            Console.WriteLine("3) VOLTAR");
-            Console.WriteLine("4) SAIR");
+            Console.WriteLine("1) EXIBIR RELATÓRIO COMPLETO DA ELEIÇÃO VIGENTE");
+            Console.WriteLine("2) VOLTAR");
+            Console.WriteLine("3) SAIR");
+
+            var entrada = Console.ReadLine();
+            int retorno;
+
+            while (!int.TryParse(entrada, out retorno) || !(retorno >= 1 && retorno <= 3))
+            {
+                Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
+                Console.WriteLine("1) EXIBIR RELATÓRIO COMPLETO DA ELEIÇÃO VIGENTE");
+                Console.WriteLine("2) VOLTAR");
+                Console.WriteLine("3) SAIR");
+                entrada = Console.ReadLine();
+            }
+            switch (retorno)
+            {
+                case 1:
+                    Console.Clear();
+                    GestaoCandidatos.ListarCandidatos();
+                    GestaoEleicao.ListarEleicoes();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Comunicacao.MenuInicialAdministracao();
+                    break;
+                case 3:
+                    return;
+            }
 
         }
-
-
     }
     internal class GestaoPartidos
     {
@@ -391,28 +426,61 @@ namespace ConsoleApp
                 valida = Servico.VerificaExisteSiglaPartido(sigla);
             }
 
-            Console.WriteLine("CARGO DO CANDIDATO: ");
-            Console.WriteLine("0) PRESIDENTE");
-            Console.WriteLine("1) GOVERNADOR");
-            Console.WriteLine("2) DEPUTADO FEDERAL");
-            Console.WriteLine("3) DEPUTADO MUNICIPAL");
-            Console.WriteLine("4) PREFEITO");
-            Console.WriteLine("5) VEREADOR");
+            Console.WriteLine("PODER DA REPUBLICA: ");
+            Console.WriteLine("0) EXECUTIVO");
+            Console.WriteLine("1) LEGISLATIVO");
             string? poder = Console.ReadLine();
             int retornoPoder;
-            while (!int.TryParse(poder, out retornoPoder) || !(retornoPoder >= 0 && retornoPoder <= 5))
+            while (!int.TryParse(poder, out retornoPoder) || !(retornoPoder >= 0 && retornoPoder <= 1))
             {
                 Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
-                Console.WriteLine("CARGO DO CANDIDATO: ");
-                Console.WriteLine("0) PRESIDENTE");
-                Console.WriteLine("1) GOVERNADOR");
-                Console.WriteLine("2) DEPUTADO FEDERAL");
-                Console.WriteLine("3) DEPUTADO MUNICIPAL");
-                Console.WriteLine("4) PREFEITO");
-                Console.WriteLine("5) VEREADOR");
+                Console.WriteLine("0) EXECUTIVO");
+                Console.WriteLine("1) LEGISLATIVO");
                 poder = Console.ReadLine();
             }
             Poderes poderEnum = (Poderes)retornoPoder;
+
+            Console.WriteLine("CARGO PRETENDIDO: ");
+            Cargo cargoEnum;
+            if (poderEnum == Poderes.EXECUTIVO)
+            {
+
+                Console.WriteLine("0) PRESIDENTE");
+                Console.WriteLine("1) GOVERNADOR");
+                Console.WriteLine("2) PREFEITO");
+                string? cargo = Console.ReadLine();
+                int retornoCargo;
+                while (!int.TryParse(cargo, out retornoCargo) || !(retornoCargo >= 0 && retornoCargo <= 2))
+                {
+                    Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
+                    Console.WriteLine("0) PRESIDENTE");
+                    Console.WriteLine("1) GOVERNADOR");
+                    Console.WriteLine("2) PREFEITO");
+                    cargo = Console.ReadLine();
+                }
+                cargoEnum = (Cargo)retornoCargo;
+
+            }
+            else
+            {
+
+                Console.WriteLine("3) DEPUTADO FEDERAL");
+                Console.WriteLine("4) DEPUTADO ESTADUAL");
+                Console.WriteLine("5) VEREADOR");
+                string? cargo = Console.ReadLine();
+                int retornoCargo;
+                while (!int.TryParse(cargo, out retornoCargo) || !(retornoCargo >= 3 && retornoCargo <= 5))
+                {
+                    Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
+                    Console.WriteLine("3) DEPUTADO FEDERAL");
+                    Console.WriteLine("4) DEPUTADO ESTADUAL");
+                    Console.WriteLine("5) VEREADOR");
+                    cargo = Console.ReadLine();
+                }
+                cargoEnum = (Cargo)retornoCargo;
+
+            }
+
 
             var partidoId = Servico.PegaIdPartidoPelaSigla(sigla);
             if (partidoId == null)
@@ -423,7 +491,7 @@ namespace ConsoleApp
                 return;
             }
 
-            Entidades.Candidato novoCandidato = new Entidades.Candidato() { Nome = nome, Partido = Guid.Parse(partidoId), PoderRepublica = poderEnum, QuantidadeVotos = 0 };
+            Entidades.Candidato novoCandidato = new Entidades.Candidato() { Nome = nome, Partido = Guid.Parse(partidoId), PoderRepublica = poderEnum, CardgoCandidato = cargoEnum };
 
             bool resposta = Servico.Adicionar(novoCandidato);
 
@@ -564,28 +632,260 @@ namespace ConsoleApp
 
         public static void CadastrarEleicao()
         {
+            string? valorPadraoGuid = "00000000-0000-0000-0000-000000000000"; //aux para consulta
+            bool existePartidos = Servico.VerificaExistePartidos();
+            bool existeCandidatos = Servico.VerificaExisteCandidatos();
+
+            if (existePartidos == false || existeCandidatos == false)
+            {
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("CERTIFIQUE-SE DE TER CADASTRADO PARTIDOS E CANDIDATOS");
+                Console.WriteLine("------------------------------");
+                return;
+            }
+
+            Console.WriteLine("CADASTRAR ELEICOES\n------------------------------");
+            Console.Write("APELIDO: ");
+            string? apelido = Console.ReadLine();
+            apelido = apelido == null ? "" : apelido;
+            while (apelido.Replace(" ", "").Equals(""))
+            {
+                Console.WriteLine("INFORME UM NOME VÁLIDO: ");
+                Console.Write("NOME: ");
+                apelido = Console.ReadLine();
+                apelido = apelido == null ? "" : apelido;
+
+            }
+
+            Console.WriteLine("CANDIDATOS QUE PARTICIPARÃO: ");
+            List<Guid> idCandidatos = new List<Guid>();
+            bool sair = false;
+            while (sair == false)
+            {
+                Console.Write("ID DO CANDIDATO: ");
+                string? id = Console.ReadLine();
+                while (!Servico.VerificaExisteCandidato(id) || id == null)
+                {
+                    Console.WriteLine("INFORME UM ID DE CANDIDATO VÁLIDO: ");
+                    Console.Write("ID DO CANDIDATO: ");
+                    id = Console.ReadLine();
+                }
+
+                string? verificaGuidJaExiste = idCandidatos.Find(x => x.ToString() == id).ToString();
+                if (verificaGuidJaExiste.Equals(valorPadraoGuid))
+                {
+                    idCandidatos.Add(Guid.Parse(id));
+                }
+                else
+                {
+                    Console.WriteLine("\n----------------------------------------------------");
+                    Console.WriteLine("CANDIDATO INFORMADO JÁ FOI ADICIONADO ANTERIORMENTE");
+                    Console.WriteLine("----------------------------------------------------\n");
+                }
+
+
+                Console.WriteLine($"QUANTIDADE DE CANDIDATOS JÁ ADICIONADOS: {idCandidatos.Count}");
+                Console.WriteLine("DESEJA ADICIONAR MAIS 1 CANDIDATO A ESSA ELEIÇÃO?");
+                Console.WriteLine("0) SIM");
+                Console.WriteLine("1) NÃO");
+                string? opcao = Console.ReadLine();
+                int retornoOpcao;
+                while (!int.TryParse(opcao, out retornoOpcao) || !(retornoOpcao >= 0 && retornoOpcao <= 1))
+                {
+                    Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
+                    Console.WriteLine("0) SIM");
+                    Console.WriteLine("1) NÃO");
+                    opcao = Console.ReadLine();
+                }
+
+                if (retornoOpcao == 1)
+                {
+                    sair = true;
+                }
+
+            }
+
+
+            if (idCandidatos.Count < 2)
+            {
+                Console.WriteLine("\n---------------------------------------------------------------------------");
+                Console.WriteLine("QUANTIDADE DE CANDIDATOS INFORMADA É INSUFICIENTE PARA SUSTENTAR UMA DISPUTA");
+                Console.WriteLine("----------------------------------------------------------------------------\n");
+                return;
+            }
+            Console.WriteLine("PODER DA REPUBLICA: ");
+            Console.WriteLine("0) EXECUTIVO");
+            Console.WriteLine("1) LEGISLATIVO");
+            string? poder = Console.ReadLine();
+            int retornoPoder;
+            while (!int.TryParse(poder, out retornoPoder) || !(retornoPoder >= 0 && retornoPoder <= 1))
+            {
+                Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
+                Console.WriteLine("0) EXECUTIVO");
+                Console.WriteLine("1) LEGISLATIVO");
+                poder = Console.ReadLine();
+            }
+            Poderes poderEnum = (Poderes)retornoPoder;
+
+            Eleicao eleicao = new Eleicao() { Apelido = apelido, CandidatosParticipantes = idCandidatos, PoderRepublica = poderEnum};
+
+            bool resposta = Servico.Adicionar(eleicao);
+
+            if (resposta == true)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("SALVO COM SUCESSSO");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
+            else
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ERRO AO SALVAR");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
 
 
         }
-
         public static void EditarEleicao()
         {
+            Console.WriteLine("EDITAR ELEIÇÃO\n------------------------------");
+            
+            Console.Write("ID: ");
+            string? id = Console.ReadLine();
+            bool valida = Servico.VerificaExisteId(id);
+            while (id == null || id.Replace(" ", "").Equals("") || valida == false)
+            {
+                Console.WriteLine("ID INFORMADO É INVÁLIDO:");
+                Console.Write("ID: ");
+                id = Console.ReadLine();
+                valida = Servico.VerificaExisteId(id);
+            }
 
+            Console.Write("APELIDO DA ELEIÇÃO: ");
+            string? apelido = Console.ReadLine();
+            while (apelido == null || apelido.Replace(" ", "").Equals(""))
+            {
+                Console.WriteLine("O APELIDO É INVÁLIDO:");
+                Console.Write("APELIDO DA ELEIÇÃO: ");
+                apelido = Console.ReadLine();
+            }
+
+            Entidades.Eleicao eleicao = new Entidades.Eleicao() { Id = Guid.Parse(id), Apelido = apelido};
+            bool resposta = Servico.Editar(eleicao);
+
+            if (resposta == true)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ELEIÇÃO EDITADA COM SUCESSO");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
+            else
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ERRO AO EDITAR");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
         }
 
         public static void ExcluirEleicao()
         {
+            Console.WriteLine("EXCLUIR ELEIÇÃO\n------------------------------");
+            Console.Write("ID DA ELEIÇÃO: ");
+            string? id = Console.ReadLine();
 
+            var resposta = Servico.Deletar(id);
+
+            if (resposta == false)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ERRO AO EXCLUIR");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
+            else
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("EXCLUIDO COM SUCESSO");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
         }
 
         public static void FinalizarEleicaoVigente()
         {
+            Console.WriteLine("FINALIZAR ELEIÇÃO VIGENTE\n------------------------------");
 
+            Console.Write("ID: ");
+            string? id = Console.ReadLine();
+            bool valida = Servico.VerificaExisteId(id);
+            while (id == null || id.Replace(" ", "").Equals("") || valida == false)
+            {
+                Console.WriteLine("ID INFORMADO É INVÁLIDO:");
+                Console.Write("ID: ");
+                id = Console.ReadLine();
+                valida = Servico.VerificaExisteId(id);
+            }
+            Console.Write("APELIDO DA ELEIÇÃO: ");
+            string? apelido = Console.ReadLine();
+            while (apelido == null || apelido.Replace(" ", "").Equals(""))
+            {
+                Console.WriteLine("O APELIDO É INVÁLIDO:");
+                Console.Write("APELIDO DA ELEIÇÃO: ");
+                apelido = Console.ReadLine();
+            }
+            Entidades.Eleicao eleicao = new Entidades.Eleicao() { Id = Guid.Parse(id), Vigente = true, Apelido = apelido };
+            bool resposta = Servico.Editar(eleicao);
+            
+            if (resposta == true)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ELEIÇÃO EDITADA COM SUCESSO");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
+            else
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ERRO AO EDITAR");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
         }
 
         public static void DefinirEleicaoVigente()
         {
+            Console.WriteLine("DEFINIR ELEIÇÃO VIGENTE\n------------------------------");
 
+            Console.Write("ID: ");
+            string? id = Console.ReadLine();
+            bool valida = Servico.VerificaExisteId(id);
+            while (id == null || id.Replace(" ", "").Equals("") || valida == false)
+            {
+                Console.WriteLine("ID INFORMADO É INVÁLIDO:");
+                Console.Write("ID: ");
+                id = Console.ReadLine();
+                valida = Servico.VerificaExisteId(id);
+            }
+            Console.Write("APELIDO DA ELEIÇÃO: ");
+            string? apelido = Console.ReadLine();
+            while (apelido == null || apelido.Replace(" ", "").Equals(""))
+            {
+                Console.WriteLine("O APELIDO É INVÁLIDO:");
+                Console.Write("APELIDO DA ELEIÇÃO: ");
+                apelido = Console.ReadLine();
+            }
+
+            Entidades.Eleicao eleicao = new Entidades.Eleicao() { Id = Guid.Parse(id), Vigente = true, Apelido = apelido };
+            bool resposta = Servico.Editar(eleicao);
+
+            if (resposta == true)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ELEIÇÃO EDITADA COM SUCESSO");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
+            else
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine("ERRO AO EDITAR");
+                Console.WriteLine("---------------------------\n\n\n\n");
+            }
         }
 
 

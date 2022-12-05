@@ -15,7 +15,7 @@ namespace ConsoleApp
             Console.WriteLine("O QUE DESEJA FAZER?");
             Console.WriteLine("1) ADMINISTRAR");
             Console.WriteLine("2) VOTAR");
-            Console.WriteLine("3) SAIR");
+            Console.WriteLine("3) SAIR\n");
 
             var entrada = Console.ReadLine();
             int retorno;
@@ -46,13 +46,13 @@ namespace ConsoleApp
         internal static void MenuInicialAdministracao()
         {
             Console.Clear();
-            Console.WriteLine("ADMINISTRAÇÃO DA URNA\n------------------------------");
+            Console.WriteLine("ADMINISTRAÇÃO DO SISTEMA ELEITORAL\n------------------------------");
             Console.WriteLine("1) GERENCIAR ELEIÇÕES");
             Console.WriteLine("2) GERENCIAR PARTIDOS");
             Console.WriteLine("3) GERENCIAR CANDIDATOS");
             Console.WriteLine("4) RELATÓRIOS E RESUMOS");
             Console.WriteLine("5) VOLTAR");
-            Console.WriteLine("6) SAIR");
+            Console.WriteLine("6) SAIR\n");
 
             var entrada = Console.ReadLine();
             int retorno;
@@ -99,44 +99,8 @@ namespace ConsoleApp
 
         internal static void MenuInicialUrna()
         {
-            Console.Clear();
-            Console.WriteLine("VOTAÇÃO\n------------------------------");
-            Console.WriteLine("1) ELEICAO MUNICIPAL");
-            Console.WriteLine("2) ELEICAO FEDERAL");
-            Console.WriteLine("3) VOLTAR");
-            Console.WriteLine("4) SAIR");
-
-            var entrada = Console.ReadLine();
-            int retorno;
-
-            while (!int.TryParse(entrada, out retorno) || !(retorno >= 1 && retorno <= 4))
-            {
-                Console.WriteLine("INFORME UMA OPÇÃO VÁLIDA:");
-                Console.WriteLine("1) ELEICAO MUNICIPAL");
-                Console.WriteLine("2) ELEICAO FEDERAL");
-                Console.WriteLine("3) VOLTAR");
-                Console.WriteLine("4) SAIR");
-            }
-
-            switch (retorno)
-            {
-                case 1:
-                    Console.Clear();
-                    Urna.EleicaoMunicipal();
-                    break;
-                case 2:
-                    Console.Clear();
-                    Urna.EleicaoFederal();
-                    break;
-          
-                case 3:
-                    Console.Clear();
-                    Start();
-                    break;
-                case 4:
-                    return;
-            }
-        }
+            Urna.MenuIniciaL();
+         }
 
     }
 

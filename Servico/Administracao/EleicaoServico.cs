@@ -1,4 +1,5 @@
-﻿using Entidades;
+﻿using ConsoleTables;
+using Entidades;
 using Entidades.Plural;
 using Persistencias;
 using Servicos.Interfaces;
@@ -103,7 +104,28 @@ namespace Servicos.Administracao
 
         public string? Listar()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var eleicoes = JsonParaObjeto<Eleicoes>.Recuperar(new Eleicoes());
+
+                if (eleicoes == null || eleicoes.ListaEleicoes.Count == 0)
+                {
+                    return default;
+                }
+
+                ConsoleTable tabela = new ConsoleTable("Id", "Apelido", "Poder","É vigente?");
+                foreach (Eleicao eleicao in eleicoes.ListaEleicoes)
+                {
+
+                    tabela.AddRow(eleicao.Id, eleicao.Apelido, eleicao.PoderRepublica, eleicao.Vigente);
+                }
+
+                return tabela.ToString();
+            }
+            catch
+            {
+                return default;
+            }
         }
 
         public static bool AtualizaEleicaoVigente()
@@ -170,6 +192,44 @@ namespace Servicos.Administracao
                 return false;
             }
         }
-
+        public bool VerificaExisteId(string? id)
+        {
+            try
+            {
+                var eleicoes = JsonParaObjeto<Eleicoes>.Recuperar(new Eleicoes());
+                var result = eleicoes?.ListaEleicoes.Find(x => x.Id.ToString() == id);
+                return result == default || result == null ? false : true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool VerificaExisteCandidato(string? idCandidato)
+        {
+            try
+            {
+                var candidatos = JsonParaObjeto<Candidatos>.Recuperar(new Candidatos());
+                var result = candidatos?.ListaCandidatos.Find(x => x.Id.ToString() == idCandidato);
+                return result == default || result == null ? false : true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool VerificaExisteEleicaoVigente()
+        {
+            try
+            {
+                var eleicoes = JsonParaObjeto<Eleicoes>.Recuperar(new Eleicoes());
+                var eleicao = eleicoes?.ListaEleicoes.Find(x => x.Vigente == true);
+                return eleicao == null || eleicao == default ? false : true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

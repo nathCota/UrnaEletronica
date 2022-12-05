@@ -13,7 +13,7 @@ namespace Persistencias
 {
     public static class ObjetoParaJson<T>
     {
-        private static string CaminhoPastaJson { get; } = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"json\";
+        private static string CaminhoPastaJson { get; } = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"xml\"; //alterei
 
         /// <summary>
         /// Cria um novo arquivo json a partir do nome do objeto informado
@@ -27,7 +27,7 @@ namespace Persistencias
             try
             {
                 string json = JValue.Parse(JsonConvert.SerializeObject(obj)).ToString(Formatting.Indented);
-                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".json";
+                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".xml"; //alterei
 
                 if (File.Exists(caminhoArquivoJson))
                 {
@@ -57,7 +57,7 @@ namespace Persistencias
             try
             {
                 string json = JValue.Parse(JsonConvert.SerializeObject(obj)).ToString(Formatting.Indented);
-                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".json";
+                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".xml"; //alterei
 
                 if (!File.Exists(caminhoArquivoJson))
                 {

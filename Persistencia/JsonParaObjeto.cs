@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Persistencias
 {
     public static class JsonParaObjeto<T>
     {
-        private static string CaminhoPastaJson { get; } = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"json\";
+        private static string CaminhoPastaJson { get; } = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"xml\"; //alterei
 
         /// <summary>
         /// Recupera arquivo json a partir do tipo genérico informado e instância qualquer compativel com o tipo genérico informado
@@ -20,7 +21,7 @@ namespace Persistencias
         {
             try
             {
-                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".json";
+                string caminhoArquivoJson = CaminhoPastaJson + obj?.GetType().ToString().Split(".")[2].ToLower() + ".xml"; //alterei
 
                 if (!Directory.Exists(CaminhoPastaJson) || !File.Exists(caminhoArquivoJson))
                 {

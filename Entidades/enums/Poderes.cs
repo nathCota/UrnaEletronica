@@ -8,12 +8,9 @@ namespace Entidades.enums
 {
     public enum Poderes
     {
-        PRESIDENTE,
-        GOVERNADOR,
-        DEPUTADO_FEDERAL,
-        DEPUTADO_MUNICIPAL,
-        PREFEITO,
-        VEREADOR
+        
+        EXECUTIVO =0,
+        LEGISLATIVO =1
 
 
     }
